@@ -316,6 +316,19 @@ function App() {
             已选择 {selectedLenses.length} 支镜头
           </div>
         </div>
+        <div className="mt-3 pt-3 border-t border-slate-700">
+          <p className="text-xs text-slate-500">
+            本项目衍生自{' '}
+            <a
+              href="https://y-g-jiang.github.io/LAC.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-slate-300 underline"
+            >
+              y-g-jiang 的 Lens Aperture Comparator
+            </a>
+          </p>
+        </div>
       </header>
 
       {/* Main content */}
