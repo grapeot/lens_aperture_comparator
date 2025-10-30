@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Lens Comparator Launch Script for PM2 (Production Mode)
-# This script builds the project and starts the production preview server
+# Lens Comparator Deployment Script
+# This script builds the project and deploys static files to Nginx directory
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -32,11 +32,28 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Start the production preview server
-echo "🚀 Starting Lens Comparator (Production Mode)..."
-echo "📍 Server will be available at http://127.0.0.1:8018"
-echo "🌐 Allowed host: yage.ai"
+# Deploy static files to Nginx directory
+DEPLOY_DIR="/var/www/yage/lens-comparator"
+echo "📦 Deploying static files to $DEPLOY_DIR..."
 
-# Start vite preview server
-exec pnpm run preview
+# Create target directory if it doesn't exist
+if [ ! -d "$DEPLOY_DIR" ]; then
+    echo "📁 Creating directory $DEPLOY_DIR..."
+    sudo mkdir -p "$DEPLOY_DIR"
+fi
+
+# Copy all files from dist to deploy directory
+echo "📋 Copying files..."
+sudo cp -r dist/* "$DEPLOY_DIR/"
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to copy files"
+    exit 1
+fi
+
+# Set proper permissions
+sudo chown -R www-data:www-data "$DEPLOY_DIR" 2>/dev/null || true
+
+echo "✅ Deployment completed successfully!"
+echo "🌐 Files are now available at /var/www/yage/lens-comparator"
+echo "📍 Make sure your Nginx is configured to serve from this location"
 
